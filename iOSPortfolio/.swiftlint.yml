@@ -1,0 +1,18 @@
+# .swiftlint.yml
+# 기본적인 SwiftLint 규칙 예시입니다. 프로젝트에 맞게 수정하세요.
+disabled_rules:
+  - line_length
+  - identifier_name
+  - type_name
+  - empty_count
+included:
+  - Targets
+excluded:
+  - Carthage
+  - Pods
+opt_in_rules:
+  - force_cast
+  - force_try
+  - private_outlet
+  - redundant_nil_coalescing
+  - vertical_whitespace
