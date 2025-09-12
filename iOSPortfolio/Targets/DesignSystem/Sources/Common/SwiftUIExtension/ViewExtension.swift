@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-extension View {
+public extension View {
     /// 마스킹으로 코너 레디어스
     func maskingCornerRadius(_ radius: CGFloat) -> some View {
         mask(
@@ -39,4 +39,5 @@ extension View {
             Spacer()
         }
     }
+
 }

@@ -13,7 +13,7 @@ TESTABLE_MODULES=("FeatureSearch" "Domain" "Data" "Core" "AppUITest")
 UITESTABLE_MODULES=("App")
 
 # 리소스(Assets.xcassets) 폴더를 만들 모듈
-RESOURCEFUL_MODULES=("App" "FeatureSearch")
+RESOURCEFUL_MODULES=("App" "FeatureSearch" "Core" )
 # --- 설정 끝 ---
 
 # Targets 최상위 디렉터리 생성

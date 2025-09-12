@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+   ConstNo.plist
+   Repository
+
+   Created by JuYoung choi on 7/20/25.
+   Copyright (c) 2025 ___ORGANIZATIONNAME___. All rights reserved.
+-->
+<plist version="1.0">
+    
+    <dict>
+        <key>ApiKey</key>
+        <string>15208ecfaeedf448c41c9312cd133cd5</string>
+    </dict>
+
+</plist>

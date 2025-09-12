@@ -77,9 +77,12 @@ let project = Project(
                 .target(name: "DesignSystem"),
                 .package(product: "Kingfisher"),
                 .package(product: "SnapKit"),
+                .package(product: "Alamofire"),
                 .package(product: "RealmSwift"),
             ]
         ),
+
+        
         .target(
             name: "DesignSystem",
             destinations: .iOS,
@@ -118,7 +121,9 @@ let project = Project(
                 swiftlintScript,
             ],
             dependencies: [
-                .target(name: "Domain") // Domain의 Repository 프로토콜을 구현하기 위해 의존
+                .target(name: "Domain"), // Domain의 Repository 프로토콜을 구현하기 위해 의존
+                .package(product: "Alamofire"),
+                .package(product: "RealmSwift")
             ]
         ),
         .target(
@@ -128,10 +133,13 @@ let project = Project(
             bundleId: "com.portfolio.core",
             deploymentTargets: appTarget,
             sources: ["Targets/Core/Sources/**"],
+            resources: ["Targets/Core/Resources/**"],
             scripts: [
                 swiftlintScript,
             ],
-            dependencies: []
+            dependencies: [
+                .package(product: "SnapKit")
+            ]
         ),
         .target(
             name: "AppUITest",

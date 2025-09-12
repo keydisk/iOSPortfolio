@@ -8,14 +8,14 @@
 import SwiftUI
 
 /// 텍스트 필드 옵션
-enum TextFieldOption {
+public enum TextFieldOption {
     case search
     case normal
 }
 
 /// 커스텀 텍스트 필드
-struct CustomTextField: View {
-    
+public struct CustomTextField: View {
+
     private struct TextFieldViewDecoration: ViewModifier {
         
         private let horizontalPadding: CGFloat  = 12
@@ -40,7 +40,15 @@ struct CustomTextField: View {
     
     var option: TextFieldOption = .normal
     var placeholder: String?
-    
+
+    public init(searchText: Binding<String>, showAllDeleteBtn: Bool = false, option: TextFieldOption = .normal, placeholder: String? = nil) {
+
+        self._searchText = searchText
+        self.showAllDeleteBtn = showAllDeleteBtn
+        self.option = option
+        self.placeholder = placeholder
+    }
+
     var drawTextField: some View {
         TextField("", text: $searchText, prompt: Text(placeholder ?? ""))
             .accentColor(.blue)
@@ -48,8 +56,8 @@ struct CustomTextField: View {
             .disableAutocorrection(false)
     }
     
-    var body: some View {
-        
+    public var body: some View {
+
         if option == .normal {
             drawTextField
                 .modifier(TextFieldViewDecoration() )
