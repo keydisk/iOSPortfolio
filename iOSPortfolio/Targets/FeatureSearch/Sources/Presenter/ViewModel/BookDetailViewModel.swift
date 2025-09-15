@@ -9,7 +9,6 @@ import Combine
 
 protocol BookDetailViewModel: ObservableObject {
 
-    func tapElement()
     var state: String { get set }
 }
 
@@ -18,13 +17,11 @@ class BookDetailViewModelImpl: BookDetailViewModel {
     @Published var state = ""
 
     let useCase: BookDetailUseCase
-
+    
     init(useCase: BookDetailUseCase, state: String) {
+
         self.useCase = useCase
         self.state = state
     }
-
-    func tapElement() {
-        
-    }
+    
 }

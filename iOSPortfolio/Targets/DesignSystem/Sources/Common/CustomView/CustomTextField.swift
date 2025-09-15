@@ -64,7 +64,8 @@ public struct CustomTextField: View {
             
         } else {
             HStack {
-                Image(name: "icn_search")
+
+                Image(name: "icn_search_up")
                     .foregroundColor(.gray)
                 
                 drawTextField
@@ -79,7 +80,7 @@ public struct CustomTextField: View {
                         searchText = ""
                     }
                     .opacity(showAllDeleteBtn ? 1 : 0)
-                    .animation(.easeIn(duration: ConstNo.shortAnimationTime), value: showAllDeleteBtn)
+                    .animation(.easeIn(duration: UIConstNo.shortAnimationTime), value: showAllDeleteBtn)
                 
             }
             .modifier(TextFieldViewDecoration() )

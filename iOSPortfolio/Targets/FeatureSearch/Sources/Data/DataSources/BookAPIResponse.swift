@@ -53,8 +53,8 @@ struct BookDocument: Codable, Identifiable {
 }
 
 extension BookAPIResponse {
-    var convertEntity: BookSearchModel {
-        BookSearchModel(isEnd: meta.isEnd, pageableCount: meta.pageableCount, totalCount: meta.totalCount, documents: documents.map({value -> BookModel in
+    var convertEntity: BookSearchEntity {
+        BookSearchEntity(isEnd: meta.isEnd, pageableCount: meta.pageableCount, totalCount: meta.totalCount, documents: documents.map({value -> BookModel in
             BookModel(authors: value.authors, contents: value.contents, datetime: value.datetime, isbn: value.isbn, price: value.price, publisher: value.publisher, salePrice: value.salePrice, status: value.status, thumbnail: value.thumbnail, title: value.title, translators: value.translators, url: value.url)
         }))
     }

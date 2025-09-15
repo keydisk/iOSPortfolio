@@ -10,7 +10,7 @@ import Foundation
 import Core
 
 // API 응답 전체 구조를 나타내는 최상위 모델
-public struct BookSearchModel: Codable {
+public struct BookSearchEntity: Codable {
     let isEnd: Bool
     let pageableCount: Int
     let totalCount: Int

@@ -6,6 +6,6 @@
 //
 import Foundation
 
-struct ConstNo {
+struct UIConstNo {
     static let shortAnimationTime: TimeInterval = 0.25
 }

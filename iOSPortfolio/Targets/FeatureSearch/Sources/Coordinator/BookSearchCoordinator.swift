@@ -32,7 +32,6 @@ public protocol BookSearchCoordinator: CommonCoordinator where NaviElement == Bo
 
 }
 
-
 public class BookSearchCoordinatorImpl: BookSearchCoordinator {
 
     public typealias NaviElement = BookSearchNavigationType
@@ -42,29 +41,6 @@ public class BookSearchCoordinatorImpl: BookSearchCoordinator {
 
     public init() {
 
-    }
-
-    /// 네비게이션 푸시
-    /// - Parameter type: 이동 타입 푸시
-    public func push(_ type: NaviElement) {
-        naviPath.append(type)
-    }
-
-    /// 네비게이션 팝
-    public func pop() {
-        naviPath.removeLast()
-    }
-
-    /// 루트로 이동
-    public func root() {
-        naviPath = []
-    }
-
-    /// 네비게이션에서 특정 뷰 삭제
-    public func removeView(removeOption: @escaping (NaviElement) -> Bool) {
-        naviPath = naviPath.filter {
-            !removeOption($0)
-        }
     }
 
     @ViewBuilder
@@ -77,6 +53,4 @@ public class BookSearchCoordinatorImpl: BookSearchCoordinator {
             BookDetailView<BookDetailViewModelImpl>(viewModel: BookDetailViewModelImpl(useCase: useCase, state: url))
         }
     }
-
-
 }

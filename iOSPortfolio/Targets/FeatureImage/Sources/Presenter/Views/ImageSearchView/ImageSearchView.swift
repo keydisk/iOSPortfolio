@@ -1,18 +1,15 @@
 //
-//  BookSearchView.swift
-//  SearchApp
+//  ImageSearchView.swift
+//  FeatureImage
 //
-//  Created by JuYoung choi on 8/14/25.
+//  Created by JuYoung choi on 9/15/25.
 //  Copyright © 2025 com.portfolio. All rights reserved.
 //
-import Foundation
-import Combine
+
 import SwiftUI
 import DesignSystem
-import Core
 
-/// 책 검색 뷰
-public struct BookSearchView<ViewModel: BookSearchViewModel, Coordinator: BookSearchCoordinator>: View {
+public struct ImageSearchView<ViewModel: ImageSearchViewModel, Coordinator: ImageSearchCoordinator>: View {
 
     @State private var title = ""
     @State private var searchText = ""
@@ -27,7 +24,6 @@ public struct BookSearchView<ViewModel: BookSearchViewModel, Coordinator: BookSe
     }
 
     public var body: some View {
-
         NavigationStack(path: $coordinator.naviPath) {
             VStack {
                 CustomTextField(searchText: $searchText, option: .search, placeholder: "Search")
@@ -47,7 +43,7 @@ public struct BookSearchView<ViewModel: BookSearchViewModel, Coordinator: BookSe
 
                 case .list:
 
-                    BookListView<ViewModel>(viewModel: viewModel)
+                    ImageListView(viewModel: viewModel)
                         .environmentObject(coordinator)
                         .padding(.horizontal, 8)
 
@@ -67,3 +63,4 @@ public struct BookSearchView<ViewModel: BookSearchViewModel, Coordinator: BookSe
         .environment(\.coordinator, coordinator)
     }
 }
+

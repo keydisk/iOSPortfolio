@@ -7,13 +7,13 @@
 //
 
 // In Domain Layer
-public protocol SearchOptionProtocol: RawRepresentable, CaseIterable where RawValue == String {
+public protocol BookSearchOptionProtocol: RawRepresentable, CaseIterable where RawValue == String {
 
     var displayName: String {get}
     var paramValue: String {get}
 }
 
-extension SearchOptionProtocol {
+extension BookSearchOptionProtocol {
 
     public var paramValue: String {
         rawValue
@@ -22,7 +22,7 @@ extension SearchOptionProtocol {
 
 // CaseIterable: 모든 케이스를 배열(.allCases)로 가져올 수 있게 함
 // Identifiable: ForEach에서 각 항목을 고유하게 식별할 수 있게 함
-public enum SearchTarget: String, SearchOptionProtocol, Identifiable {
+public enum BookSearchTarget: String, BookSearchOptionProtocol, Identifiable {
     case title
     case isbn
     case publisher
@@ -46,7 +46,7 @@ public enum SearchTarget: String, SearchOptionProtocol, Identifiable {
     }
 }
 
-public enum SearchBookSort: String, SearchOptionProtocol, Identifiable {
+public enum BookSearchBookSort: String, BookSearchOptionProtocol, Identifiable {
     case accuracy
     case latest
 

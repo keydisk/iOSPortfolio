@@ -12,7 +12,7 @@ import Foundation
 /// 책 검색
 public protocol BookSearchApiInterface {
 
-    func fetchBook(keyword: String, pageNo: Int, target: SearchTarget, sortingOption: SearchBookSort) async throws -> BookSearchModel
+    func fetchBook(keyword: String, pageNo: Int, target: (any BookSearchOptionProtocol)?, sortingOption: (any BookSearchOptionProtocol)?) async throws -> BookSearchEntity
 }
 
 public class BookSearchAPIImpl: BookSearchApiInterface, NetworkComm {
@@ -21,14 +21,19 @@ public class BookSearchAPIImpl: BookSearchApiInterface, NetworkComm {
 
     }
 
-    public func fetchBook(keyword: String, pageNo: Int, target: SearchTarget, sortingOption: SearchBookSort) async throws -> BookSearchModel {
+    public func fetchBook(keyword: String, pageNo: Int, target: (any BookSearchOptionProtocol)?, sortingOption: (any BookSearchOptionProtocol)?) async throws -> BookSearchEntity {
 
         var param = Parameters()
 
         param["query"] = keyword
         param["page"] = pageNo
-        param["target"] = target.rawValue
-        param["sort"] = sortingOption.rawValue
+        if let targetValue = target?.paramValue {
+            param["target"] = targetValue
+        }
+        
+        if let sort = sortingOption?.paramValue {
+            param["sort"] = sort
+        }
         
         let data: BookAPIResponse = try await request(router: .bookSearch, parameters: param)
         

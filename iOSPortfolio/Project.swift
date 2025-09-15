@@ -12,18 +12,18 @@ public enum CommonPackages {
 }
 
 public let swiftlintScript: TargetScript = .pre(
-  script: """
+    script: """
     echo "SwiftLint SRCROOT: ${SRCROOT}"
     export PATH="$PATH:/opt/homebrew/bin"
-
+    
     if which swiftlint >/dev/null; then
         swiftlint --config "${SRCROOT}/.swiftlint.yml" || true
     else
         echo "warning: SwiftLint not installed"
     fi
     """,
-  name: "SwiftLint",
-  outputPaths: ["$(DERIVED_FILE_DIR)/swiftlint.log"]
+    name: "SwiftLint",
+    outputPaths: ["$(DERIVED_FILE_DIR)/swiftlint.log"]
 )
 
 public let appTarget: DeploymentTargets = .iOS("16.0")
@@ -57,6 +57,7 @@ let project = Project(
             ],
             dependencies: [
                 .target(name: "FeatureSearch"),
+                .target(name: "FeatureImage"),
                 .target(name: "Data"), // App에서 의존성 주입을 위해 Data 모듈을 알아야 함
             ]
         ),
@@ -64,7 +65,7 @@ let project = Project(
             name: "FeatureSearch",
             destinations: .iOS,
             product: .framework,
-            bundleId: "com.portfolio.feature",
+            bundleId: "com.portfolio.featureSearch",
             deploymentTargets: appTarget,
             sources: ["Targets/FeatureSearch/Sources/**"],
             resources: ["Targets/FeatureSearch/Resources/**"],
@@ -82,7 +83,29 @@ let project = Project(
             ]
         ),
 
-        
+        .target(
+            name: "FeatureImage",
+            destinations: .iOS,
+            product: .framework,
+            bundleId: "com.portfolio.featureImage",
+            deploymentTargets: appTarget,
+            sources: ["Targets/FeatureImage/Sources/**"],
+            resources: ["Targets/FeatureImage/Resources/**"],
+            scripts: [
+                swiftlintScript,
+            ],
+            dependencies: [
+                .target(name: "Domain"),
+                .target(name: "Core"),
+                .target(name: "DesignSystem"),
+                .package(product: "Kingfisher"),
+                .package(product: "SnapKit"),
+                .package(product: "Alamofire"),
+                .package(product: "RealmSwift"),
+            ]
+        ),
+
+
         .target(
             name: "DesignSystem",
             destinations: .iOS,
@@ -90,6 +113,7 @@ let project = Project(
             bundleId: "com.portfolio.DesignSystem",
             deploymentTargets: appTarget,
             sources: ["Targets/DesignSystem/Sources/**"],
+            resources: ["Targets/DesignSystem/Resources/**"],
             scripts: [
                 swiftlintScript,
             ],
