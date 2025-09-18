@@ -6,24 +6,25 @@ public enum CommonPackages {
         .package(url: "https://github.com/Alamofire/Alamofire", .upToNextMinor(from: "5.10.2")),
         .package(url: "https://github.com/SnapKit/SnapKit", .upToNextMinor(from: "5.0.0")),
         .package(url: "https://github.com/ReactiveX/RxSwift", .upToNextMinor(from: "6.8.0")),
+        .package(url: "https://github.com/RxSwiftCommunity/RxDataSources", .upToNextMajor(from: "5.0.0")),
         .package(url: "https://github.com/realm/realm-swift", .exact("20.0.3")),
         .package(url: "https://github.com/onevcat/Kingfisher", .exact("8.3.3")),
     ]
 }
 
 public let swiftlintScript: TargetScript = .pre(
-  script: """
+    script: """
     echo "SwiftLint SRCROOT: ${SRCROOT}"
     export PATH="$PATH:/opt/homebrew/bin"
-
+    
     if which swiftlint >/dev/null; then
         swiftlint --config "${SRCROOT}/.swiftlint.yml" || true
     else
         echo "warning: SwiftLint not installed"
     fi
     """,
-  name: "SwiftLint",
-  outputPaths: ["$(DERIVED_FILE_DIR)/swiftlint.log"]
+    name: "SwiftLint",
+    outputPaths: ["$(DERIVED_FILE_DIR)/swiftlint.log"]
 )
 
 public let appTarget: DeploymentTargets = .iOS("16.0")
@@ -57,6 +58,8 @@ let project = Project(
             ],
             dependencies: [
                 .target(name: "FeatureSearch"),
+                .target(name: "FeatureImage"),
+                .target(name: "FeatureBookMark"),
                 .target(name: "Data"), // App에서 의존성 주입을 위해 Data 모듈을 알아야 함
             ]
         ),
@@ -64,7 +67,7 @@ let project = Project(
             name: "FeatureSearch",
             destinations: .iOS,
             product: .framework,
-            bundleId: "com.portfolio.feature",
+            bundleId: "com.portfolio.featureSearch",
             deploymentTargets: appTarget,
             sources: ["Targets/FeatureSearch/Sources/**"],
             resources: ["Targets/FeatureSearch/Resources/**"],
@@ -77,9 +80,59 @@ let project = Project(
                 .target(name: "DesignSystem"),
                 .package(product: "Kingfisher"),
                 .package(product: "SnapKit"),
+                .package(product: "Alamofire"),
                 .package(product: "RealmSwift"),
             ]
         ),
+
+        .target(
+            name: "FeatureImage",
+            destinations: .iOS,
+            product: .framework,
+            bundleId: "com.portfolio.featureImage",
+            deploymentTargets: appTarget,
+            sources: ["Targets/FeatureImage/Sources/**"],
+            resources: ["Targets/FeatureImage/Resources/**"],
+            scripts: [
+                swiftlintScript,
+            ],
+            dependencies: [
+                .target(name: "Domain"),
+                .target(name: "Core"),
+                .target(name: "DesignSystem"),
+                .package(product: "Kingfisher"),
+                .package(product: "SnapKit"),
+                .package(product: "Alamofire"),
+                .package(product: "RealmSwift"),
+            ]
+        ),
+
+        .target(
+            name: "FeatureBookMark",
+            destinations: .iOS,
+            product: .framework,
+            bundleId: "com.portfolio.featureBookMark",
+            deploymentTargets: appTarget,
+            sources: ["Targets/FeatureBookMark/Sources/**"],
+            resources: ["Targets/FeatureBookMark/Resources/**"],
+            scripts: [
+                swiftlintScript,
+            ],
+            dependencies: [
+                .target(name: "Domain"),
+                .target(name: "Core"),
+                .target(name: "DesignSystem"),
+                .package(product: "Kingfisher"),
+                .package(product: "SnapKit"),
+                .package(product: "Alamofire"),
+                .package(product: "RealmSwift"),
+                .package(product: "RxSwift"),
+                .package(product: "RxCocoa"),
+                .package(product: "RxDataSources"),
+
+            ]
+        ),
+
         .target(
             name: "DesignSystem",
             destinations: .iOS,
@@ -87,6 +140,7 @@ let project = Project(
             bundleId: "com.portfolio.DesignSystem",
             deploymentTargets: appTarget,
             sources: ["Targets/DesignSystem/Sources/**"],
+            resources: ["Targets/DesignSystem/Resources/**"],
             scripts: [
                 swiftlintScript,
             ],
@@ -118,7 +172,9 @@ let project = Project(
                 swiftlintScript,
             ],
             dependencies: [
-                .target(name: "Domain") // Domain의 Repository 프로토콜을 구현하기 위해 의존
+                .target(name: "Domain"), // Domain의 Repository 프로토콜을 구현하기 위해 의존
+                .package(product: "Alamofire"),
+                .package(product: "RealmSwift")
             ]
         ),
         .target(
@@ -128,10 +184,13 @@ let project = Project(
             bundleId: "com.portfolio.core",
             deploymentTargets: appTarget,
             sources: ["Targets/Core/Sources/**"],
+            resources: ["Targets/Core/Resources/**"],
             scripts: [
                 swiftlintScript,
             ],
-            dependencies: []
+            dependencies: [
+                .package(product: "SnapKit")
+            ]
         ),
         .target(
             name: "AppUITest",

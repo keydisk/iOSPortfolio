@@ -7,11 +7,11 @@
 
 import UIKit
 
-extension UIColor {
-    
+public extension UIColor {
+
     /// RGB값을 UIColor로 변경
-    static func rgba(_ red:Float, _ green:Float, _ blue:Float, _ alpha:Float = 100) -> UIColor {
-        
+    public static func rgba(_ red:Float, _ green:Float, _ blue:Float, _ alpha:Float = 100) -> UIColor {
+
         let divin: Float = 255
         let alphaDivin: Float = 100
         
@@ -48,14 +48,14 @@ extension UIColor {
     
     
     /// RGB값을 UIColor로 변경
-    static func rgb(_ red:Float, _ green:Float, _ blue:Float) -> UIColor {
-        
+    public static func rgb(_ red:Float, _ green:Float, _ blue:Float) -> UIColor {
+
         return UIColor.rgba(red, green, blue)
     }
     
     /// comment : 핵사 텍스트를 UIColor로 변환
-    static func fromHex(_ hexString: String, alpha: CGFloat = 100) -> UIColor {
-        
+    public static func fromHex(_ hexString: String, alpha: CGFloat = 100) -> UIColor {
+
         let formatted = hexString.replacingOccurrences(of: "0x", with: "").replacingOccurrences(of: "#", with: "")
         
         if let hex = Int(formatted, radix: 16) {
