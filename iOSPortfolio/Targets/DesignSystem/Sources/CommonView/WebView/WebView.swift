@@ -12,45 +12,6 @@ import WebKit
 
 import Combine
 
-/// 웹뷰
-struct SUWebView: View {
-    
-    let url: String
-    @Environment(\.dismiss) private var dismiss
-    /// 웹뷰에서 가져온 타이틀 적용을 위해 사용
-    @State var webViewTitle = ""
-    
-    var body: some View {
-        VStack {
-            SUWKWebView(url: url, webViewTitle: $webViewTitle)
-                .accessibilityIdentifier("testWebView")
-        }
-        .navigationBarBackButtonHidden(true)  // 시스템 기본 백버튼 숨김
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                HStack(spacing: 0) {
-                    Image(systemName: "arrow.left")
-                        .imageScale(.medium)
-                    Text("홈")
-                        .modifier(TextDecoration(textType: .contents))
-                }
-                .padding(.leading, -26)
-                .onTapGesture {
-                    
-                    dismiss()
-                }
-                .accessibilityIdentifier("webViewBack")
-            }
-            
-            ToolbarItem(placement: .principal) {
-                Text(webViewTitle) // 원하는 타이틀로
-                    .lineLimit(1)
-                    .modifier(TextDecoration(textType: .title) )
-            }
-            
-        }
-    }
-}
 
 /// 웹뷰 UIKit 랩핑
 struct SUWKWebView: UIViewRepresentable {

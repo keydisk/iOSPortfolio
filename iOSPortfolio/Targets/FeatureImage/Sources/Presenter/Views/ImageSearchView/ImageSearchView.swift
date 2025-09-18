@@ -32,6 +32,7 @@ public struct ImageSearchView<ViewModel: ImageSearchViewModel, Coordinator: Imag
                         viewModel.setSearchText(text)
                     }
                     .padding(.horizontal, 8)
+                    .accessibilityIdentifier("imageSearchTextField")
 
                 switch viewModel.state {
                 case .empty(let image, let text):
@@ -45,6 +46,7 @@ public struct ImageSearchView<ViewModel: ImageSearchViewModel, Coordinator: Imag
                     ImageListView(viewModel: viewModel)
                         .environmentObject(coordinator)
                         .padding(.horizontal, 8)
+                        .accessibilityIdentifier("imageList")
                 case .noSearch(let image, let text):
 
                     StatePrintView(iconImage: image, title: text)

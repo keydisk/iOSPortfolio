@@ -48,6 +48,7 @@ class BookMarkDetailViewController: UIViewController {
             self?.navigationItem.title = title.removingPercentEncoding
         })
 
+        webView.accessibilityIdentifier = "bookMarkWebView"
         webView.requestUrl(requestUrl: url)
         view.addSubview(webView)
         self.webView = webView
@@ -67,6 +68,7 @@ class BookMarkDetailViewController: UIViewController {
                                          action: #selector(backButtonTapped))
 
         backButton.tintColor = .black
+        backButton.accessibilityIdentifier = "bookMarkDetailBackButton"
 
         self.navigationItem.leftBarButtonItem = backButton
     }

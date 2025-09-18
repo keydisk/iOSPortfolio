@@ -97,6 +97,8 @@ public class BookMarkViewController: UIViewController {
 
             m.edges.equalToSuperview()
         })
+
+        tableView.accessibilityIdentifier = "BookMarkViewList"
     }
 
     private func bindTableView() {
@@ -107,6 +109,8 @@ public class BookMarkViewController: UIViewController {
         )
 
         tableView.register(BookMarkCell.self, forCellReuseIdentifier: BookMarkCell.identifier)
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "default")
+
         tableView.rx.setDelegate(self).disposed(by: disposeBag)
 
         tableView.rx
@@ -121,27 +125,39 @@ public class BookMarkViewController: UIViewController {
 
                 self?.coordinator.push(type: type)
             }).disposed(by: disposeBag)
-        
+
+        dataSet(animationConfig)
+    }
+
+    private func dataSet(_ animationConfig: AnimationConfiguration) {
         let dataSource = RxTableViewSectionedAnimatedDataSource<BookMarkItemSection>(
             animationConfiguration: animationConfig,
             configureCell: { _, tableView, indexPath, item in
 
-                let cell = tableView.dequeueReusableCell(withIdentifier: BookMarkCell.identifier, for: indexPath) as! BookMarkCell
+                if let cell = tableView.dequeueReusableCell(withIdentifier: BookMarkCell.identifier, for: indexPath) as? BookMarkCell {
 
-                cell.configure(model: item)
-                cell.onLayoutUpdateNeeded = {
+                    cell.configure(model: item)
+                    cell.onLayoutUpdateNeeded = {
 
-                    DispatchQueue.main.async {
-                        // 현재의 데이터 소스 업데이트가 모두 끝난 후, 다음 차례에 레이아웃을 업데이트하도록 예약합니다.
-                        UIView.performWithoutAnimation {
-                            tableView.beginUpdates()
-                            tableView.endUpdates()
+                        DispatchQueue.main.async {
+                            // 현재의 데이터 소스 업데이트가 모두 끝난 후, 다음 차례에 레이아웃을 업데이트하도록 예약합니다.
+                            UIView.performWithoutAnimation {
+                                tableView.beginUpdates()
+                                tableView.endUpdates()
+                            }
+
                         }
-
                     }
+
+                    cell.accessibilityIdentifier = "bookMarkCell"
+
+                    return cell
+                } else {
+                    let cell = tableView.dequeueReusableCell(withIdentifier: "default", for: indexPath)
+                    return cell
                 }
 
-                return cell
+
             },
             canEditRowAtIndexPath: { _, _ in
                 return true
@@ -158,8 +174,6 @@ public class BookMarkViewController: UIViewController {
             })
             .bind(to: tableView.rx.items(dataSource: dataSource))
             .disposed(by: disposeBag)
-
-
     }
 
     public override func viewDidLoad() {

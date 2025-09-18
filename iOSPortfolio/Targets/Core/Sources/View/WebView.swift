@@ -25,8 +25,8 @@ public struct SUWebView: View {
     public var body: some View {
         VStack {
             SUWKWebView(url: url, webViewTitle: $webViewTitle)
-                .accessibilityIdentifier("testWebView")
         }
+        .accessibilityIdentifier("testWebView")
         .navigationBarBackButtonHidden(true) // 시스템 기본 백버튼 숨김
     }
 }

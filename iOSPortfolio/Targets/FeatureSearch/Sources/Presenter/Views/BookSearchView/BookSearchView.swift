@@ -36,6 +36,7 @@ public struct BookSearchView<ViewModel: BookSearchViewModel, Coordinator: BookSe
                         viewModel.setSearchText(text)
                     }
                     .padding(.horizontal, 8)
+                    .accessibilityIdentifier("bookSearchTextField")
 
                 switch viewModel.state {
                 case .empty(let image, let text):
@@ -50,8 +51,7 @@ public struct BookSearchView<ViewModel: BookSearchViewModel, Coordinator: BookSe
                     BookListView<ViewModel>(viewModel: viewModel)
                         .environmentObject(coordinator)
                         .padding(.horizontal, 8)
-
-
+                        .accessibilityIdentifier("bookListView")
                 case .noSearch(let image, let text):
 
                     StatePrintView(iconImage: image, title: text)

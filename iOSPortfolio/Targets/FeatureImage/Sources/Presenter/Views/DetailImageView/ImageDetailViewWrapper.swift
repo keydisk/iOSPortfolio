@@ -34,11 +34,13 @@ struct ImageDetailView: View {
                         .imageScale(.medium)
                     Text("홈")
                 }
+                .accessibilityIdentifier("imageDetailViewBackBtn")
                 .onTapGesture {
                     cooridnator.pop()
                 }
             }
         }
+        .accessibilityIdentifier("imageDetailView")
     }
 
 

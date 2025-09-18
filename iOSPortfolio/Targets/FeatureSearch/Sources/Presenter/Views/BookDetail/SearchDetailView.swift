@@ -32,6 +32,7 @@ struct BookDetailView<ViewModel: BookDetailViewModel>: View {
                         Text("뒤로가기")
                             .modifier(TextDecoration(textType: .contents))
                     }
+                    .accessibilityIdentifier("webViewBack")
                     .onTapGesture {
 
                         coordinator.pop()

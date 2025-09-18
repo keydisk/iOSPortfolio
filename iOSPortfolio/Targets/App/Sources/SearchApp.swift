@@ -29,7 +29,7 @@ struct SearchApp: App {
             TabView(selection: $selectedTab) {
                 // 첫 번째 탭
                 coordinator.build(type: .searchBook)
-                // 비디오 검색
+                // 이미지 검색
                 coordinator.build(type: .image)
                 // 북마크
                 coordinator.build(type: .bookMark)

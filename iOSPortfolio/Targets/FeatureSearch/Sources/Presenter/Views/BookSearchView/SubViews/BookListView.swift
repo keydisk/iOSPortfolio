@@ -16,14 +16,19 @@ struct BookListView<ViewModel: BookSearchViewModel>: View {
     var body: some View {
 
         List(documents) { document in
-            BookListItemView(document: document, viewModel: viewModel)
-                .listRowInsets(EdgeInsets())
-                .listRowSeparator(.hidden)
-                .onTapGesture {
-                    print("tap")
-
-                    coordinator.push(.detail(url: document.url))
-                }
+            Button(action: {
+                // 버튼이 눌렸을 때 실행될 액션 (기존 onTapGesture 내용)
+                coordinator.push(.detail(url: document.url))
+            }) {
+                // 버튼의 '내용'으로 기존의 BookListItemView를 그대로 사용합니다.
+                BookListItemView(document: document, viewModel: viewModel)
+            }
+            // ✅ 2. 버튼의 기본 스타일(파란색 텍스트 등)을 없애서 원래 모양을 유지합니다.
+            .buttonStyle(.plain)
+            // ✅ 3. 이제 accessibilityIdentifier는 Button에 붙습니다.
+            .accessibilityIdentifier("bookListCell")
+            .listRowInsets(EdgeInsets())
+            .listRowSeparator(.hidden)
         }
         .refreshable {
             viewModel.refresh()

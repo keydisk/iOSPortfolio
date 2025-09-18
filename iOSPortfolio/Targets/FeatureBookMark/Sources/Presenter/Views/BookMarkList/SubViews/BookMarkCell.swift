@@ -131,7 +131,7 @@ class BookMarkCell: UITableViewCell {
 
             make.leading.trailing.equalTo(titleLabel)
             make.top.equalTo(titleLabel.snp.bottom).offset(4)
-            make.bottom.lessThanOrEqualToSuperview().inset(12)
+            make.bottom.lessThanOrEqualToSuperview().inset(12).priority(.high)
         }
     }
 

@@ -71,9 +71,11 @@ struct PhotoElementView<ViewModel: ImageSearchViewModel>: View {
     private var imageCard: some View {
         VStack {
             thumbnailView
+                .accessibilityIdentifier("imageSearchThumbnail")
                 .onTapGesture {
                     coordinator.push(.detail(url: element.imageUrl))
                 }
+
             setText(text: element.printTitle)
                 .allowsHitTesting(false)
             if let printDate = element.printDate {
@@ -98,27 +100,23 @@ struct PhotoElementView<ViewModel: ImageSearchViewModel>: View {
     }
 
     var body: some View {
-        ZStack {
-            imageCard
-                .rotation3DEffect(.degrees(showBack ? 89.999 : 0), axis: (x: 0, y: 1, z: 0))
-                .opacity(showBack ? 0 : 1)
-                .animation(.linear(duration: 0.3), value: showBack)
-
-            optionCard
-                .rotation3DEffect(.degrees(showBack ? 0 : -89.999), axis: (x: 0, y: 1, z: 0))
-                .opacity(showBack ? 1 : 0)
-                .animation(.linear(duration: 0.3), value: showBack)
-        }
-        .contentShape(Rectangle())
-        .onTapGesture {
-            // 탭하면 애니메이션과 함께 showBack 상태를 토글
+        Button(action: {
             withAnimation(.easeInOut(duration: 0.15)) {
                 showBack.toggle()
             }
-        }
+        }, label: {
+            ZStack {
+                imageCard
+                    .rotation3DEffect(.degrees(showBack ? 89.999 : 0), axis: (x: 0, y: 1, z: 0))
+                    .opacity(showBack ? 0 : 1)
+                    .animation(.linear(duration: 0.3), value: showBack)
+
+                optionCard
+                    .rotation3DEffect(.degrees(showBack ? 0 : -89.999), axis: (x: 0, y: 1, z: 0))
+                    .opacity(showBack ? 1 : 0)
+                    .animation(.linear(duration: 0.3), value: showBack)
+            }
+        })
+        .accessibilityIdentifier("imageListCell")
     }
 }
-
-//#Preview {
-//    PhotoElementView()
-//}

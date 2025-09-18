@@ -18,7 +18,7 @@ public let swiftlintScript: TargetScript = .pre(
     export PATH="$PATH:/opt/homebrew/bin"
     
     if which swiftlint >/dev/null; then
-        swiftlint --config "${SRCROOT}/.swiftlint.yml" || true
+        swiftlint --config "${SRCROOT}/.swiftlint.yml"
     else
         echo "warning: SwiftLint not installed"
     fi
@@ -60,7 +60,14 @@ let project = Project(
                 .target(name: "FeatureSearch"),
                 .target(name: "FeatureImage"),
                 .target(name: "FeatureBookMark"),
+                .target(name: "Domain"),
                 .target(name: "Data"), // App에서 의존성 주입을 위해 Data 모듈을 알아야 함
+                .package(product: "RxSwift"),
+                .package(product: "RxCocoa"),
+                .package(product: "RxDataSources"),
+                .package(product: "Kingfisher"),
+                .package(product: "SnapKit"),
+                .package(product: "RealmSwift")
             ]
         ),
         .target(
@@ -202,7 +209,12 @@ let project = Project(
             sources: ["Targets/AppUITest/Sources**"],
             dependencies: [
                 .target(name: "App"),
-                .package(product: "RealmSwift")]
+                .package(product: "RxSwift"),
+                .package(product: "RxCocoa"),
+                .package(product: "RxDataSources"),
+                .package(product: "Kingfisher"),
+                .package(product: "SnapKit"),
+                .package(product: "RealmSwift") ]
         )
     ]
 )
