@@ -9,10 +9,12 @@
 import Combine
 import Core
 import SwiftUI
+import Domain
 
 public protocol ImageSearchViewModel: ObservableObject {
 
     func setSearchText(_ text: String)
+    func selectFavorite(_ model: ImageElement)
     func refresh()
     func nextPage(_ model: ImageElement)
 
@@ -27,11 +29,13 @@ public class ImageSearchViewModelImpl: ImageSearchViewModel {
     private let searchText = CurrentValueSubject<String, Never>("")
     private var cancellables: Set<AnyCancellable> = []
     private let useCase: ImageSearchUseCase
-    private var pageNo: Int = 1
+    private let bookMarkUseCase: BookMarkUseCase
+    private var pageNo: Int = 0
 
-    public init(imageSearchUseCase: ImageSearchUseCase) {
+    public init(imageSearchUseCase: ImageSearchUseCase, bookMarkUseCase: BookMarkUseCase) {
 
         useCase = imageSearchUseCase
+        self.bookMarkUseCase = bookMarkUseCase
         dataBinding()
     }
 
@@ -41,10 +45,35 @@ public class ImageSearchViewModelImpl: ImageSearchViewModel {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: {[weak self] value in
 
+                
                 self?.state = value
-
             })
             .store(in: &cancellables)
+
+        bookMarkUseCase.bookmarksPublisher
+            .sink(receiveValue: {[weak self] bookMarkList in
+
+                guard case .list(var currentResult) = self?.state,
+                      let list = self?.bookMarkUseCase.getFavoriteList(targetList: currentResult.elements, bookMarkList: bookMarkList ?? []) else {
+                    return
+                }
+
+                currentResult.elements = list
+                
+                self?.state = .list(currentResult)
+
+            }).store(in: &cancellables)
+    }
+
+    private func getImageList() async throws -> ImageSearchEntity {
+        let searchText = self.searchText.value
+
+        var result = try await self.useCase.searchImage(keyword: searchText, pageNo: self.pageNo + 1, sorting: nil)
+        let list = self.bookMarkUseCase.getFavoriteList(targetList: result.elements, bookMarkList: self.bookMarkUseCase.allValues)
+
+        result.elements = list
+
+        return result
     }
 
     private func fetchResults(_ keyword: String) -> AnyPublisher<ResultState<ImageSearchEntity>, Never> {
@@ -59,7 +88,7 @@ public class ImageSearchViewModelImpl: ImageSearchViewModel {
             Task {[weak self] in
 
                 do {
-                    guard let result = try await self?.useCase.searchImage(keyword: keyword, pageNo: 1, sorting: nil) else {
+                    guard let result = try await self?.getImageList() else {
                         return
                     }
 
@@ -68,6 +97,8 @@ public class ImageSearchViewModelImpl: ImageSearchViewModel {
                     } else {
                         promise(.success(.list(result)))
                     }
+
+                    self?.pageNo = 1
 
                 } catch {
 
@@ -82,7 +113,18 @@ public class ImageSearchViewModelImpl: ImageSearchViewModel {
         searchText.send(text)
     }
 
+    public func selectFavorite(_ model: ImageElement) {
+
+        if model.favorite {
+            bookMarkUseCase.removeElement(model.convertBookMarkEntity)
+        } else {
+            bookMarkUseCase.selectElement(model.convertBookMarkEntity)
+        }
+
+    }
+
     public func refresh() {
+
 
     }
 
@@ -103,8 +145,7 @@ public class ImageSearchViewModelImpl: ImageSearchViewModel {
             }
 
             do {
-                guard let keyword = self?.searchText.value,
-                      var result = try await self?.useCase.searchImage(keyword: keyword, pageNo: (self?.pageNo ?? 1) + 1, sorting: nil) else {
+                guard var result = try await self?.getImageList() else {
                     return
                 }
 

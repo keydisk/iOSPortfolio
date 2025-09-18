@@ -33,8 +33,6 @@ struct SearchApp: App {
                 coordinator.build(type: .image)
                 // 북마크
                 coordinator.build(type: .bookMark)
-                // 설정
-                coordinator.build(type: .setting)
             }
             .tint(.blue)
 

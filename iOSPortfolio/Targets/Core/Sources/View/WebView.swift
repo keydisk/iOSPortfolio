@@ -62,13 +62,13 @@ struct SUWKWebView: UIViewRepresentable {
 }
 
 /// progressBar 추가 된 웹뷰
-class CustomWebView: WKWebView {
-    
+public class CustomWebView: WKWebView {
+
     let loadingEstimatedProgress = "estimatedProgress"
     weak var progressBar: UIProgressView?
     var titleCallBack: ((String) -> Void)?
 
-    init(loadingFinishCallBack: @escaping (String) -> Void) {
+    public init(loadingFinishCallBack: @escaping (String) -> Void) {
         super.init(frame: .zero, configuration: WKWebViewConfiguration())
 
         titleCallBack = loadingFinishCallBack
@@ -128,7 +128,7 @@ class CustomWebView: WKWebView {
     }
 
     /// 웹페이지 로딩
-    func requestUrl(requestUrl: String, ignoreCache: Bool = false, urlEncoding: Bool = true) {
+    public func requestUrl(requestUrl: String, ignoreCache: Bool = false, urlEncoding: Bool = true) {
         guard let url = getUrl(requestUrl, urlEncoding: urlEncoding) else {
             return
         }
@@ -143,7 +143,7 @@ class CustomWebView: WKWebView {
     }
 
     /// 웹뷰 로딩 상태를 보여주기 위해 적용
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
+    public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
         guard keyPath == loadingEstimatedProgress else {
             super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
             return
@@ -173,7 +173,7 @@ class CustomWebView: WKWebView {
 
 extension CustomWebView: WKNavigationDelegate {
     /// 타이틀 적용을 위해 사용
-    func webView(_ webView: WKWebView, didFinish _: WKNavigation!) {
+    public func webView(_ webView: WKWebView, didFinish _: WKNavigation!) {
         titleCallBack?(webView.title ?? "")
     }
 }

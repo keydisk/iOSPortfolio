@@ -5,6 +5,7 @@
 //  Created by JuYoung choi on 9/15/25.
 //  Copyright © 2025 com.portfolio. All rights reserved.
 //
+import Domain
 
 public struct ImageSearchEntity: Codable {
     let totalCount: Int
@@ -15,10 +16,10 @@ public struct ImageSearchEntity: Codable {
 }
 
 // MARK: - ImageDocument (개별 이미지 문서)
-public struct ImageElement: Codable, Identifiable, Hashable {
+public struct ImageElement: Codable, WithBookMarkList, Hashable {
 
     // 여기서는 docUrl을 id로 가정합니다.
-    public var id: String { imageUrl }
+    public var id: String
 
     let collection: String
     let thumbnailUrl: String
@@ -28,4 +29,5 @@ public struct ImageElement: Codable, Identifiable, Hashable {
     let displaySitename: String
     let docUrl: String
     let datetime: String // Date 타입으로 파싱할 수도 있습니다.
+    public var favorite: Bool = false
 }

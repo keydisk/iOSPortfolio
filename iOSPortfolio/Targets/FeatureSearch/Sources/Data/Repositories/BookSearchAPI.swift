@@ -9,12 +9,6 @@ import Data
 import Alamofire
 import Foundation
 
-/// 책 검색
-public protocol BookSearchApiInterface {
-
-    func fetchBook(keyword: String, pageNo: Int, target: (any BookSearchOptionProtocol)?, sortingOption: (any BookSearchOptionProtocol)?) async throws -> BookSearchEntity
-}
-
 public class BookSearchAPIImpl: BookSearchApiInterface, NetworkComm {
 
     public init() {

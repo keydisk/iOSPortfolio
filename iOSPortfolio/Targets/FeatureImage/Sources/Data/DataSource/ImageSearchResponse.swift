@@ -62,7 +62,7 @@ extension ImageSearchResponse {
 
         ImageSearchEntity(totalCount: meta.totalCount, pageableCount: meta.pageableCount, isEnd: meta.isEnd, elements: documents.map({model -> ImageElement in
 
-            ImageElement(collection: model.collection, thumbnailUrl: model.thumbnailUrl, imageUrl: model.imageUrl, width: model.width, height: model.height, displaySitename: model.displaySitename, docUrl: model.docUrl, datetime: model.datetime)
+            ImageElement(id: UUID().uuidString, collection: model.collection, thumbnailUrl: model.thumbnailUrl, imageUrl: model.imageUrl, width: model.width, height: model.height, displaySitename: model.displaySitename, docUrl: model.docUrl, datetime: model.datetime)
         }))
     }
 }

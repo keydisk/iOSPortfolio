@@ -7,6 +7,13 @@
 //
 import Combine
 import Foundation
+import Domain
+
+/// 책 검색
+public protocol BookSearchApiInterface {
+
+    func fetchBook(keyword: String, pageNo: Int, target: (any BookSearchOptionProtocol)?, sortingOption: (any BookSearchOptionProtocol)?) async throws -> BookSearchEntity
+}
 
 /// 책 검색
 public protocol BookSearchUseCase {
@@ -17,7 +24,6 @@ public protocol BookSearchUseCase {
     ///   - pageNo: 페이지 넘버
     /// - Returns: 검색 결과
     func searchBook(keyword: String, pageNo: Int, target: BookSearchTarget?, sorting: BookSearchBookSort?) async throws -> BookSearchEntity
-
 }
 
 
@@ -42,5 +48,4 @@ public class BookSearchUseCaseImpl: BookSearchUseCase {
 
         return try await api.fetchBook(keyword: keyword, pageNo: pageNo, target: target, sortingOption: sorting)
     }
-
 }

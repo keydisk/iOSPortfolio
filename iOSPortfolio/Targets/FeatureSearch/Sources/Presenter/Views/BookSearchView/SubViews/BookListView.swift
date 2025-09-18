@@ -85,6 +85,18 @@ struct BookListItemView<ViewModel: BookSearchViewModel>: View {
                 }
             }
         }
+        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+            // "삭제" 버튼
+            Button(role: .cancel) {
+
+                viewModel.setFavorite(document)
+            } label: {
+
+                Label("즐겨찾기", systemImage: document.favoriteIcon)
+                    .symbolRenderingMode(.palette)
+            }
+            .tint(.blue)
+        }
         .padding(.vertical, 8)
         .onAppear(perform: {
 

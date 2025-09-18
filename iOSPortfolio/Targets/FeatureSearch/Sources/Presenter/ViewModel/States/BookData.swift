@@ -7,6 +7,8 @@
 //
 import Core
 import Foundation
+import Combine
+import Domain
 
 public struct BookSearchModel: Codable {
     let isEnd: Bool
@@ -16,11 +18,10 @@ public struct BookSearchModel: Codable {
     var documents: [BookData]
 }
 
-
 // 개별 책 정보를 담는 모델
-public struct BookData: Codable, Identifiable, Equatable {
+public struct BookData: Codable, WithBookMarkList, Equatable {
     // Identifiable 프로토콜을 위해 고유 식별자로 isbn을 사용
-    public var id: String { url }
+    public var id: String
 
     let authors: [String]
     let contents: String
@@ -28,9 +29,7 @@ public struct BookData: Codable, Identifiable, Equatable {
 
     /// 화면에 표시할 date
     lazy var printDate: String? = {
-        let date = Date(fromString: datetime, format: "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ")
-
-        return date?.toString(format: "yyyy-MM-dd")
+        Date(fromString: datetime, format: "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ")?.toString(format: "yyyy-MM-dd")
     }()
 
     private let isbn: String
@@ -42,14 +41,16 @@ public struct BookData: Codable, Identifiable, Equatable {
     let title: String
     let translators: [String]
     let url: String
+    public var favorite: Bool = false
 
     lazy var moveUrl: URL? = {
 
         URL(string: url)
     }()
 
-    public init(authors: [String], contents: String, datetime: String, isbn: String, price: Int, publisher: String, salePrice: Int, status: String, thumbnail: String, title: String, translators: [String], url: String) {
+    public init(id: String, authors: [String], contents: String, datetime: String, isbn: String, price: Int, publisher: String, salePrice: Int, status: String, thumbnail: String, title: String, translators: [String], url: String) {
 
+        self.id = id
         self.authors = authors
         self.contents = contents
         self.datetime = datetime
@@ -72,7 +73,7 @@ extension Array where Element == BookModel {
 
         map({model -> BookData in
 
-            let data = BookData(authors: model.authors, contents: model.contents, datetime: model.datetime, isbn: model.isbn, price: model.price, publisher: model.publisher, salePrice: model.salePrice, status: model.status, thumbnail: model.thumbnail, title: model.title, translators: model.translators, url: model.url)
+            let data = BookData(id: UUID().uuidString, authors: model.authors, contents: model.contents, datetime: model.datetime, isbn: model.isbn, price: model.price, publisher: model.publisher, salePrice: model.salePrice, status: model.status, thumbnail: model.thumbnail, title: model.title, translators: model.translators, url: model.url)
 
             return data
         })
@@ -85,9 +86,21 @@ extension BookSearchEntity {
     var convertViewState: BookSearchModel {
         BookSearchModel(isEnd: isEnd, pageableCount: pageableCount, totalCount: totalCount, documents: documents.map({model -> BookData in
 
-            let data = BookData(authors: model.authors, contents: model.contents, datetime: model.datetime, isbn: model.isbn, price: model.price, publisher: model.publisher, salePrice: model.salePrice, status: model.status, thumbnail: model.thumbnail, title: model.title, translators: model.translators, url: model.url)
+            let data = BookData(id: UUID().uuidString, authors: model.authors, contents: model.contents, datetime: model.datetime, isbn: model.isbn, price: model.price, publisher: model.publisher, salePrice: model.salePrice, status: model.status, thumbnail: model.thumbnail, title: model.title, translators: model.translators, url: model.url)
 
             return data
         }))
+    }
+}
+
+extension BookData {
+
+    var favoriteIcon: String {
+        favorite ? "star.fill" : "star.leadinghalf.filled"
+    }
+
+    var convertBookMarkEntity: BookMarkEntity {
+
+        BookMarkEntity(id: id, title: title, thumbnailImgUrl: thumbnail, moveUrl: url, registDate: Date(), type: .bookSearch)
     }
 }

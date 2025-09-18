@@ -7,6 +7,7 @@
 //
 import Foundation
 import Core
+import Domain
 
 extension ImageElement {
 
@@ -22,10 +23,15 @@ extension ImageElement {
 
     var printTitle: String {
 
-        if displaySitename.isEmpty {
-            return "-"
-        } else {
-            return displaySitename
-        }
+        displaySitename.isEmpty ? "-" : displaySitename
+    }
+
+    var favoriteIcon: String {
+        favorite ? "star.fill" : "star.leadinghalf.filled"
+    }
+    
+    var convertBookMarkEntity: BookMarkEntity {
+
+        return BookMarkEntity(id: id, title: printTitle, thumbnailImgUrl: thumbnailUrl, moveUrl: docUrl, registDate: Date(), type: .imageSearch)
     }
 }

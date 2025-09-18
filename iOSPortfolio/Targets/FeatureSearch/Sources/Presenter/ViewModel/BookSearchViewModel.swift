@@ -9,10 +9,12 @@ import Foundation
 import Combine
 import Core
 import SwiftUI
+import Domain
 
 public protocol BookSearchViewModel: ObservableObject {
 
     func setSearchText(_ text: String)
+    func setFavorite(_ model: BookData)
     func refresh()
     func nextPage(_ model: BookData)
 
@@ -26,14 +28,17 @@ final public class BookSearchViewModelImpl: BookSearchViewModel {
                   "검색어를 넣어 검색해주세요.")
 
     let bookSearchUseCase: BookSearchUseCase
+    let bookMarkUseCase: BookMarkUseCase
 
     private let searchText = CurrentValueSubject<String, Never>("")
     private var cancellables: Set<AnyCancellable> = []
-    private var pageNo: Int = 1
+    private var pageNo: Int = 0
 
-    public init(bookSearchUseCase: BookSearchUseCase) {
+    public init(bookSearchUseCase: BookSearchUseCase, bookMarkUseCase: BookMarkUseCase) {
 
         self.bookSearchUseCase = bookSearchUseCase
+        self.bookMarkUseCase   = bookMarkUseCase
+
         dataBinding()
     }
 
@@ -44,8 +49,31 @@ final public class BookSearchViewModelImpl: BookSearchViewModel {
             .receive(on: DispatchQueue.main)
             .assign(to: \.state, on: self)
             .store(in: &cancellables)
+
+        bookMarkUseCase.bookmarksPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] list in
+
+                guard case .list(var currentValue) = self?.state,
+                      let result = self?.bookMarkUseCase.getFavoriteList(targetList: currentValue.documents, bookMarkList: list ?? []) else {
+                    return
+                }
+
+                currentValue.documents = result
+                self?.state = .list(currentValue)
+            }
+            .store(in: &cancellables)
     }
 
+    private func getBookList() async throws -> BookSearchModel {
+        let searchText = self.searchText.value
+
+        var result = try await self.bookSearchUseCase.searchBook(keyword: searchText, pageNo: self.pageNo + 1, target: nil, sorting: nil).convertViewState
+        let list = self.bookMarkUseCase.getFavoriteList(targetList: result.documents, bookMarkList: self.bookMarkUseCase.allValues)
+        result.documents = list
+
+        return result
+    }
 
     private func fetchResults(_ keyword: String) -> Future<ResultState<BookSearchModel>, Never> {
 
@@ -60,7 +88,7 @@ final public class BookSearchViewModelImpl: BookSearchViewModel {
             Task {[weak self] in
 
                 do {
-                    guard let result = try await self?.bookSearchUseCase.searchBook(keyword: keyword, pageNo: 1, target: nil, sorting: nil) else {
+                    guard let result = try await self?.getBookList() else {
 
                         return
                     }
@@ -69,7 +97,7 @@ final public class BookSearchViewModelImpl: BookSearchViewModel {
                         promise(.success(.empty(Image(systemName: "exclamationmark.icloud"),
                                                 "검색 결과가 없습니다.") ))
                     } else {
-                        promise(.success(.list(result.convertViewState)))
+                        promise(.success(.list(result)))
                     }
 
                     self?.pageNo = 1
@@ -95,7 +123,17 @@ final public class BookSearchViewModelImpl: BookSearchViewModel {
                 state = result
             }
         }
+    }
 
+    public func setFavorite(_ model: BookData) {
+
+        if model.favorite {
+
+            bookMarkUseCase.removeElement(model.convertBookMarkEntity)
+        } else {
+            
+            bookMarkUseCase.selectElement(model.convertBookMarkEntity)
+        }
     }
 
     private var confirmModel: BookData?
@@ -112,17 +150,16 @@ final public class BookSearchViewModelImpl: BookSearchViewModel {
         confirmModel = model
 
         Task {[weak self] in
-            
+
             do {
-                guard let searchText = self?.searchText.value,
-                      var result = try await self?.bookSearchUseCase.searchBook(keyword: searchText, pageNo: (self?.pageNo ?? 1) + 1, target: nil, sorting: nil).convertViewState else {
+                guard var result = try await self?.getBookList() else {
 
                     return
                 }
 
                 result.documents = value.documents + result.documents
                 let applyResult = result
-                
+
                 if result.totalCount > 0 {
 
                     await MainActor.run {[weak self] in

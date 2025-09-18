@@ -6,6 +6,7 @@ public enum CommonPackages {
         .package(url: "https://github.com/Alamofire/Alamofire", .upToNextMinor(from: "5.10.2")),
         .package(url: "https://github.com/SnapKit/SnapKit", .upToNextMinor(from: "5.0.0")),
         .package(url: "https://github.com/ReactiveX/RxSwift", .upToNextMinor(from: "6.8.0")),
+        .package(url: "https://github.com/RxSwiftCommunity/RxDataSources", .upToNextMajor(from: "5.0.0")),
         .package(url: "https://github.com/realm/realm-swift", .exact("20.0.3")),
         .package(url: "https://github.com/onevcat/Kingfisher", .exact("8.3.3")),
     ]
@@ -58,6 +59,7 @@ let project = Project(
             dependencies: [
                 .target(name: "FeatureSearch"),
                 .target(name: "FeatureImage"),
+                .target(name: "FeatureBookMark"),
                 .target(name: "Data"), // App에서 의존성 주입을 위해 Data 모듈을 알아야 함
             ]
         ),
@@ -105,6 +107,31 @@ let project = Project(
             ]
         ),
 
+        .target(
+            name: "FeatureBookMark",
+            destinations: .iOS,
+            product: .framework,
+            bundleId: "com.portfolio.featureBookMark",
+            deploymentTargets: appTarget,
+            sources: ["Targets/FeatureBookMark/Sources/**"],
+            resources: ["Targets/FeatureBookMark/Resources/**"],
+            scripts: [
+                swiftlintScript,
+            ],
+            dependencies: [
+                .target(name: "Domain"),
+                .target(name: "Core"),
+                .target(name: "DesignSystem"),
+                .package(product: "Kingfisher"),
+                .package(product: "SnapKit"),
+                .package(product: "Alamofire"),
+                .package(product: "RealmSwift"),
+                .package(product: "RxSwift"),
+                .package(product: "RxCocoa"),
+                .package(product: "RxDataSources"),
+
+            ]
+        ),
 
         .target(
             name: "DesignSystem",

@@ -40,14 +40,11 @@ public struct ImageSearchView<ViewModel: ImageSearchViewModel, Coordinator: Imag
                 case .error(let error):
 
                     StatePrintView(iconImage: Image(systemName: "network.slash"), title: "Error: \(error.description)")
-
                 case .list:
 
                     ImageListView(viewModel: viewModel)
                         .environmentObject(coordinator)
                         .padding(.horizontal, 8)
-
-
                 case .noSearch(let image, let text):
 
                     StatePrintView(iconImage: image, title: text)
@@ -63,4 +60,3 @@ public struct ImageSearchView<ViewModel: ImageSearchViewModel, Coordinator: Imag
         .environment(\.coordinator, coordinator)
     }
 }
-

@@ -49,7 +49,7 @@ public class ImageSearchCoordinatorImpl: ImageSearchCoordinator {
 
         switch type {
         case .detail(url: let url):
-            Text(url)
+            ImageDetailView(imageUrl: url, coordi: self)
         }
     }
 }

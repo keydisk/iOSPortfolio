@@ -31,16 +31,12 @@ public struct ImageListView<ViewModel: ImageSearchViewModel>: View {
         }
         return []
     }
-
-
+    
     public var body: some View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 16) {
                 ForEach(documents, id: \.id) { item in
-                    PhotoElementView(element: item)
-                        .onTapGesture {
-                            coordinator.push(.detail(url: item.docUrl))
-                        }
+                    PhotoElementView(element: item, viewModel: viewModel)
                         .onAppear {
                             viewModel.nextPage(item)
                         }

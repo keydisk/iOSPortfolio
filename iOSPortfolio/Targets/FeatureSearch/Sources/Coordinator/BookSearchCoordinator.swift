@@ -29,7 +29,6 @@ extension EnvironmentValues {
 }
 
 public protocol BookSearchCoordinator: CommonCoordinator where NaviElement == BookSearchNavigationType {
-
 }
 
 public class BookSearchCoordinatorImpl: BookSearchCoordinator {

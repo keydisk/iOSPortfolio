@@ -9,11 +9,6 @@ import Core
 import Data
 import Alamofire
 
-/// 이미지 검색
-public protocol ImageSearchApiInterface {
-
-    func fetchImage(keyword: String, pageNo: Int, sort: (any ImageSearchOptionProtocol)?) async throws -> ImageSearchEntity
-}
 
 public class ImageSearchAPIImpl: ImageSearchApiInterface, NetworkComm {
 
