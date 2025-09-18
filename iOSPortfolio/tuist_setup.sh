@@ -4,7 +4,7 @@ echo "📁 Tuist 프로젝트 구조에 맞춰 디렉터리 생성 중..."
 
 # --- 설정 ---
 # 기본 모듈 목록
-MODULES=("App" "FeatureSearch" "DesignSystem" "Domain" "Data" "Core" "AppUITest")
+MODULES=("App" "FeatureSearch" "FeatureImage" "DesignSystem" "FeatureBookMark" "Domain" "Data" "Core" "AppUITest")
 
 # 유닛 테스트 타겟을 만들 모듈
 TESTABLE_MODULES=("FeatureSearch" "Domain" "Data" "Core" "AppUITest")
@@ -13,7 +13,7 @@ TESTABLE_MODULES=("FeatureSearch" "Domain" "Data" "Core" "AppUITest")
 UITESTABLE_MODULES=("App")
 
 # 리소스(Assets.xcassets) 폴더를 만들 모듈
-RESOURCEFUL_MODULES=("App" "FeatureSearch")
+RESOURCEFUL_MODULES=("App" "FeatureSearch" "FeatureImage" "FeatureBookMark" "DesignSystem" "Core" )
 # --- 설정 끝 ---
 
 # Targets 최상위 디렉터리 생성
