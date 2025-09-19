@@ -1,4 +1,4 @@
-# iOSPortfolio 프로젝트 아키텍처 분석 보고서
+# iOSPortfolio 프로젝트 보고서
 
 ## 1. 프로젝트 개요
 
