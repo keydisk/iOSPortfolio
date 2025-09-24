@@ -23,7 +23,7 @@ public struct BookMarkViewControllerWrapper: UIViewControllerRepresentable {
 
         self.viewModel   = viewModel
     }
-
+    
     public func makeCoordinator() -> Coordinator {
         Coordinator(self)
     }
@@ -59,15 +59,12 @@ public struct BookMarkViewControllerWrapper: UIViewControllerRepresentable {
     }
 }
 
-
 public class BookMarkViewController: UIViewController {
 
     let viewModel: BookMarkViewModel
-
     let coordinator: (any BookMarkCoordinator)
     let tableView: UITableView
     let disposeBag = DisposeBag()
-
 
     public init(viewModel: BookMarkViewModel, coordi: (any BookMarkCoordinator)) {
 
@@ -140,7 +137,6 @@ public class BookMarkViewController: UIViewController {
                     cell.onLayoutUpdateNeeded = {
 
                         DispatchQueue.main.async {
-                            // 현재의 데이터 소스 업데이트가 모두 끝난 후, 다음 차례에 레이아웃을 업데이트하도록 예약합니다.
                             UIView.performWithoutAnimation {
                                 tableView.beginUpdates()
                                 tableView.endUpdates()
@@ -156,8 +152,6 @@ public class BookMarkViewController: UIViewController {
                     let cell = tableView.dequeueReusableCell(withIdentifier: "default", for: indexPath)
                     return cell
                 }
-
-
             },
             canEditRowAtIndexPath: { _, _ in
                 return true
@@ -169,7 +163,7 @@ public class BookMarkViewController: UIViewController {
                 if case .list(let t) = state {
                     return t
                 } else {
-                    return []
+                    return nil
                 }
             })
             .bind(to: tableView.rx.items(dataSource: dataSource))

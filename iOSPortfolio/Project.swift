@@ -141,6 +141,32 @@ let project = Project(
         ),
 
         .target(
+            name: "FeaturePhotoViewer",
+            destinations: .iOS,
+            product: .framework,
+            bundleId: "com.portfolio.featurePhotoViewer",
+            deploymentTargets: appTarget,
+            sources: ["Targets/FeaturePhotoViewer/Sources/**"],
+            resources: ["Targets/FeaturePhotoViewer/Resources/**"],
+            scripts: [
+                swiftlintScript,
+            ],
+            dependencies: [
+                .target(name: "Domain"),
+                .target(name: "Core"),
+                .target(name: "DesignSystem"),
+                .package(product: "Kingfisher"),
+                .package(product: "SnapKit"),
+                .package(product: "Alamofire"),
+                .package(product: "RealmSwift"),
+                .package(product: "RxSwift"),
+                .package(product: "RxCocoa"),
+                .package(product: "RxDataSources"),
+
+            ]
+        ),
+
+        .target(
             name: "DesignSystem",
             destinations: .iOS,
             product: .framework,

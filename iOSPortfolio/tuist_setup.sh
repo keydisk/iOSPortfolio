@@ -4,16 +4,19 @@ echo "📁 Tuist 프로젝트 구조에 맞춰 디렉터리 생성 중..."
 
 # --- 설정 ---
 # 기본 모듈 목록
-MODULES=("App" "FeatureSearch" "FeatureImage" "DesignSystem" "FeatureBookMark" "Domain" "Data" "Core" "AppUITest")
+MODULES=("App" "FeatureSearch" "FeatureImage" "DesignSystem" "FeatureBookMark" "FeaturePhotoViewer" "Domain" "Data" "Core")
 
 # 유닛 테스트 타겟을 만들 모듈
-TESTABLE_MODULES=("FeatureSearch" "Domain" "Data" "Core" "AppUITest")
+TESTABLE_MODULES=("FeatureSearch" "Domain" "Data" "Core" "App")
 
 # UI 테스트 타겟을 만들 모듈
 UITESTABLE_MODULES=("App")
 
 # 리소스(Assets.xcassets) 폴더를 만들 모듈
-RESOURCEFUL_MODULES=("App" "FeatureSearch" "FeatureImage" "FeatureBookMark" "DesignSystem" "Core" )
+RESOURCEFUL_MODULES=("App" "FeatureSearch" "FeatureImage" "FeatureBookMark" "FeaturePhotoViewer" "DesignSystem" "Core" )
+
+# 상세 디렉터리 구조를 생성할 Feature 모듈 목록 (*** 추가된 부분 ***)
+FEATURE_MODULES=("FeatureSearch" "FeatureImage" "FeatureBookMark" "FeaturePhotoViewer")
 # --- 설정 끝 ---
 
 # Targets 최상위 디렉터리 생성
@@ -31,11 +34,53 @@ for MODULE in "${MODULES[@]}"; do
     UITESTS_DIR="${BASE_DIR}/UITests"
     RESOURCES_DIR="${BASE_DIR}/Resources"
 
-    # 1. Sources 폴더 생성
-    if [ ! -d "$SOURCES_DIR" ]; then
-        mkdir -p "$SOURCES_DIR"
-        # Tuist가 모듈을 인식할 수 있도록 더미 소스 파일 생성
-        cat <<EOF > "${SOURCES_DIR}/${MODULE}Source.swift"
+    # 1. Sources 폴더 생성 (*** 로직 수정된 부분 ***)
+    # Feature 모듈인지 확인하여 구조를 다르게 생성
+    if [[ " ${FEATURE_MODULES[@]} " =~ " ${MODULE} " ]]; then
+        echo "✨ ${MODULE}은(는) Feature 모듈이므로 상세 구조를 생성합니다."
+
+        # 상세 구조를 위한 하위 디렉터리 목록
+        SUB_DIRS=(
+            "Presenter/ViewModels"
+            "Presenter/Views"
+            "Domain/Entities"
+            "Domain/UseCase"
+            "Data/DataSource"
+            "Data/Repositories"
+            "Coordinator"
+        )
+
+        for SUB_DIR in "${SUB_DIRS[@]}"; do
+            # 전체 경로 생성
+            TARGET_DIR="${SOURCES_DIR}/${SUB_DIR}"
+            mkdir -p "$TARGET_DIR"
+
+            # 마지막 폴더 이름을 따서 더미 파일 이름 생성 (예: ViewModels, Views, Entities...)
+            DUMMY_FILE_NAME=$(basename "$SUB_DIR")
+            DUMMY_FILE_PATH="${TARGET_DIR}/${DUMMY_FILE_NAME}.swift"
+
+            # 더미 파일이 존재하지 않을 경우에만 생성
+            if [ ! -f "$DUMMY_FILE_PATH" ]; then
+                cat <<EOF > "$DUMMY_FILE_PATH"
+//
+//  ${DUMMY_FILE_NAME}.swift
+//  ${MODULE}
+//
+//  Tuist 인식을 위한 더미 파일입니다.
+//
+import Foundation
+EOF
+            fi
+        done
+        echo "✅ ${MODULE}의 상세 디렉터리 및 더미 파일 생성 완료"
+
+    else
+        # Feature 모듈이 아닐 경우, 기존 로직 수행
+        echo "🔹 ${MODULE}은(는) 일반 모듈이므로 기본 구조를 생성합니다."
+        if [ ! -d "$SOURCES_DIR" ]; then
+            mkdir -p "$SOURCES_DIR"
+            # Tuist가 모듈을 인식할 수 있도록 더미 소스 파일 생성
+            cat <<EOF > "${SOURCES_DIR}/${MODULE}Source.swift"
 //
 //  ${MODULE}Source.swift
 //
@@ -43,10 +88,12 @@ for MODULE in "${MODULES[@]}"; do
 //
 import Foundation
 EOF
-        echo "✅ $SOURCES_DIR 및 더미 소스 파일 생성 완료"
-    else
-        echo "ℹ️  $SOURCES_DIR 이미 존재함"
+            echo "✅ $SOURCES_DIR 및 더미 소스 파일 생성 완료"
+        else
+            echo "ℹ️  $SOURCES_DIR 이미 존재함"
+        fi
     fi
+
 
     # 2. 유닛 테스트 폴더 생성
     if [[ " ${TESTABLE_MODULES[@]} " =~ " ${MODULE} " ]]; then
@@ -151,3 +198,4 @@ fi
 echo ""
 echo "✅ 모든 디렉터리 및 기본 파일 생성이 완료되었습니다."
 echo "➡️  이제 'tuist generate' 명령어를 실행하여 Xcode 프로젝트를 생성하세요."
+

@@ -17,6 +17,7 @@ import Data
 enum TapType {
     case searchBook
     case image
+    case photoViewer
     case bookMark
 
     var title: String {
@@ -27,6 +28,8 @@ enum TapType {
             return "이미지"
         case .bookMark:
             return "북마크"
+        case .photoViewer:
+            return "사진첩"
         }
     }
 
@@ -37,6 +40,8 @@ enum TapType {
             return Image(systemName: "magnifyingglass")
         case .image:
             return Image(systemName: "photo.on.rectangle")
+        case .photoViewer:
+            return Image(systemName: "photo.on.rectangle.angled.fill")
         case .bookMark:
             return Image(systemName: "bookmark")
         }
@@ -81,6 +86,12 @@ class TabCoordinator: ObservableObject {
         BookMarkViewControllerWrapper(viewModel: BookMarkViewModelImpl(useCase: bookMarkUseCase))
     }
 
+    @ViewBuilder
+    func photoViewer() -> some View {
+
+        BookMarkViewControllerWrapper(viewModel: BookMarkViewModelImpl(useCase: bookMarkUseCase))
+    }
+
     // ✅ TabView 자체를 생성하는 메서드
     @ViewBuilder
     func build(type: TapType) -> some View {
@@ -99,13 +110,20 @@ class TabCoordinator: ObservableObject {
                     Text(type.title)
                 }
                 .tag(1)
+        case .photoViewer:
+            photoViewer()
+                .tabItem {
+                    type.iconImage
+                    Text(type.title)
+                }
+                .tag(2)
         case .bookMark:
             bookMarkView()
                 .tabItem {
                     type.iconImage
                     Text(type.title)
                 }
-                .tag(2)
+                .tag(3)
         }
     }
 }
