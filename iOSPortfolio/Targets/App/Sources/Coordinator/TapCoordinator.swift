@@ -11,6 +11,7 @@ import UIKit
 import FeatureSearch
 import FeatureImage
 import FeatureBookMark
+import FeaturePhotoViewer
 import Domain
 import Data
 
@@ -76,7 +77,7 @@ class TabCoordinator: ObservableObject {
     func makeSearchImageView() -> some View {
 
         let viewModel = ImageSearchViewModelImpl(imageSearchUseCase: ImageSearchUseCaseImpl(api: ImageSearchAPIImpl()), bookMarkUseCase: bookMarkUseCase )
-        ImageSearchView<ImageSearchViewModelImpl, ImageSearchCoordinatorImpl>(title: "", viewModel: viewModel, coordinator: ImageSearchCoordinatorImpl() )
+        ImageSearchView(title: "", viewModel: viewModel, coordinator: ImageSearchCoordinatorImpl() )
     }
 
     // ✅ 3. 알림 뷰 생성 메서드
@@ -89,7 +90,7 @@ class TabCoordinator: ObservableObject {
     @ViewBuilder
     func photoViewer() -> some View {
 
-        BookMarkViewControllerWrapper(viewModel: BookMarkViewModelImpl(useCase: bookMarkUseCase))
+        PhotoBookListView(viewModel: PhotoViewModelImpl(photoUseCase: PhotoUseCaseImpl(photoRepository: PhotoRepositoryImpl() )), coordinator: PhotoViewCoordinatorImpl() )
     }
 
     // ✅ TabView 자체를 생성하는 메서드

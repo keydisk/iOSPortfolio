@@ -14,4 +14,5 @@ public enum ResultState<T> {
     case empty(Image, String)
     case list(T)
     case error(NSError)
+
 }

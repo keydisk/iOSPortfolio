@@ -9,6 +9,7 @@
 import SwiftUI
 import UIKit
 import SnapKit
+import DesignSystem
 
 struct ImageDetailView: View {
 
@@ -42,73 +43,27 @@ struct ImageDetailView: View {
         }
         .accessibilityIdentifier("imageDetailView")
     }
-
-
 }
 
-struct ImageDetailViewWrapper: UIViewRepresentable {
+public struct ImageDetailViewWrapper: UIViewRepresentable {
 
     let imageUrl: String
 
-    init(imageUrl: String) {
+    public init(imageUrl: String) {
 
         self.imageUrl = imageUrl
     }
 
-    func makeUIView(context: Context) -> ImageDetialView {
+    public func makeUIView(context: Context) -> ImageDetialView {
 
         let imageDetail = ImageDetialView(imageURL: imageUrl)
 
         return imageDetail
     }
 
-    func updateUIView(_ uiViewController: ImageDetialView, context: Context) {
+    public func updateUIView(_ uiViewController: ImageDetialView, context: Context) {
         // SwiftUI 상태 바뀔 때 업데이트 처리 필요시 여기에 작성
     }
 }
 
 
-class ImageDetialView: UIScrollView {
-
-    let imgUrl: String
-    weak var imageView: UIImageView!
-    init(imageURL: String) {
-
-        imgUrl = imageURL
-
-        super.init(frame: .zero)
-
-        maximumZoomScale = 3.0 // 최대 확대 배율
-        minimumZoomScale = 1.0 // 최소 축소 배율
-        bouncesZoom = true
-        self.delegate = self
-
-        let imageView = UIImageView()
-
-        imageView.kf.setImage(with: URL(string: imgUrl))
-        imageView.contentMode = .scaleAspectFit
-
-        addSubview(imageView)
-        self.imageView = imageView
-
-        imageView.snp.makeConstraints { m in
-
-            m.width.equalTo(snp.width)
-            m.edges.equalToSuperview()
-        }
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-
-}
-
-extension ImageDetialView: UIScrollViewDelegate {
-
-    public func viewForZooming(in scrollView: UIScrollView) -> UIView? {
-
-        self.imageView
-    }
-}

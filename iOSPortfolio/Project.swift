@@ -48,7 +48,8 @@ let project = Project(
                     "UILaunchStoryboardName": "LaunchScreen",
                     "CFBundleShortVersionString": "1.0.0",  // 앱 버전
                     "CFBundleVersion": "100",               // 빌드 번호
-                    "CFBundleDisplayName": "최주영포트폴리오"    // 앱 표시 이름
+                    "CFBundleDisplayName": "최주영포트폴리오",   // 앱 표시 이름
+                    "NSPhotoLibraryUsageDescription": "사진을 검색하고 앨범에 저장하기 위해 사진첩 접근 권한이 필요합니다."
                 ]
             ),
             sources: ["Targets/App/Sources/**"],
@@ -60,6 +61,8 @@ let project = Project(
                 .target(name: "FeatureSearch"),
                 .target(name: "FeatureImage"),
                 .target(name: "FeatureBookMark"),
+                .target(name: "FeaturePhotoViewer"),
+
                 .target(name: "Domain"),
                 .target(name: "Data"), // App에서 의존성 주입을 위해 Data 모듈을 알아야 함
                 .package(product: "RxSwift"),
@@ -179,6 +182,7 @@ let project = Project(
             ],
             dependencies: [
                 .package(product: "SnapKit"),
+                .package(product: "Kingfisher"),
             ]
         ),
 

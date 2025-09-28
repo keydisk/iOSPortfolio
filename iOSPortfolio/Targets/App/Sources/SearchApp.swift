@@ -31,6 +31,8 @@ struct SearchApp: App {
                 coordinator.build(type: .searchBook)
                 // 이미지 검색
                 coordinator.build(type: .image)
+                // 포토 뷰어
+                coordinator.build(type: .photoViewer)
                 // 북마크
                 coordinator.build(type: .bookMark)
             }

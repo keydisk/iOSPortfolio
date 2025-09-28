@@ -9,6 +9,7 @@
 import UIKit
 import SnapKit
 import Core
+import DesignSystem
 
 class BookMarkDetailViewController: UIViewController {
 
