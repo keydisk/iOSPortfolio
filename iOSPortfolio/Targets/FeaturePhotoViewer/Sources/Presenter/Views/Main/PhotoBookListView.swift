@@ -22,12 +22,12 @@ public struct PhotoBookListView<ViewModel: PhotoViewModel, Coordinator: PhotoVie
         VStack {
 
             switch viewModel.state {
-            case .empty(let image, let text):
+            case .empty(let emptyModel):
 
-                StatePrintView(iconImage: image, title: text)
-            case .error(let error):
+                StatePrintView(stateModel: emptyModel)
+            case .error(let errorModel):
 
-                StatePrintView(iconImage: Image(systemName: "network.slash"), title: "Error: \(error.description)")
+                StatePrintView(stateModel: errorModel)
 
             case .list:
 
@@ -35,9 +35,10 @@ public struct PhotoBookListView<ViewModel: PhotoViewModel, Coordinator: PhotoVie
                     .environmentObject(coordinator)
                     .padding(.horizontal, 8)
                     .accessibilityIdentifier("photoBookListView")
-            case .noSearch(let image, let text):
 
-                StatePrintView(iconImage: image, title: text)
+            case .noSearch(let noSearchModel):
+
+                StatePrintView(stateModel: noSearchModel)
             }
 
         }

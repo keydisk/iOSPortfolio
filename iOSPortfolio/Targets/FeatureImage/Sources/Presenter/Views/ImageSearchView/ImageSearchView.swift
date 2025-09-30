@@ -35,21 +35,21 @@ public struct ImageSearchView<ViewModel: ImageSearchViewModel, Coordinator: Imag
                     .accessibilityIdentifier("imageSearchTextField")
 
                 switch viewModel.state {
-                case .empty(let image, let text):
+                case .empty(let emptyModel):
 
-                    StatePrintView(iconImage: image, title: text)
+                    StatePrintView(stateModel: emptyModel)
                 case .error(let error):
 
-                    StatePrintView(iconImage: Image(systemName: "network.slash"), title: "Error: \(error.description)")
+                    StatePrintView(stateModel: error)
                 case .list:
 
                     ImageListView(viewModel: viewModel)
                         .environmentObject(coordinator)
                         .padding(.horizontal, 8)
                         .accessibilityIdentifier("imageList")
-                case .noSearch(let image, let text):
+                case .noSearch(let model):
 
-                    StatePrintView(iconImage: image, title: text)
+                    StatePrintView(stateModel: model)
                 }
 
                 Spacer()

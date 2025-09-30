@@ -39,12 +39,12 @@ public struct BookSearchView<ViewModel: BookSearchViewModel, Coordinator: BookSe
                     .accessibilityIdentifier("bookSearchTextField")
 
                 switch viewModel.state {
-                case .empty(let image, let text):
+                case .empty(let emptyModel):
 
-                    StatePrintView(iconImage: image, title: text)
-                case .error(let error):
+                    StatePrintView(stateModel: emptyModel)
+                case .error(let errorModel):
 
-                    StatePrintView(iconImage: Image(systemName: "network.slash"), title: "Error: \(error.description)")
+                    StatePrintView(stateModel: errorModel)
 
                 case .list:
 
@@ -52,9 +52,9 @@ public struct BookSearchView<ViewModel: BookSearchViewModel, Coordinator: BookSe
                         .environmentObject(coordinator)
                         .padding(.horizontal, 8)
                         .accessibilityIdentifier("bookListView")
-                case .noSearch(let image, let text):
+                case .noSearch(let noSearchModel):
 
-                    StatePrintView(iconImage: image, title: text)
+                    StatePrintView(stateModel: noSearchModel)
                 }
 
                 Spacer()

@@ -14,7 +14,6 @@ public struct ImageListView<ViewModel: ImageSearchViewModel>: View {
     @Environment(\.coordinator) var coordinator
 
     public init(viewModel: ViewModel) {
-        
         self.viewModel = viewModel
     }
 
@@ -29,6 +28,7 @@ public struct ImageListView<ViewModel: ImageSearchViewModel>: View {
         if case .list(let data) = viewModel.state {
             return data.elements
         }
+        
         return []
     }
     

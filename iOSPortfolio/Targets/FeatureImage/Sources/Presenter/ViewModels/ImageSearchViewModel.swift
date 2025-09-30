@@ -24,7 +24,7 @@ public protocol ImageSearchViewModel: ObservableObject {
 
 public class ImageSearchViewModelImpl: ImageSearchViewModel {
 
-    @Published public var state: ResultState<ImageSearchEntity> = .noSearch(Image(systemName: "rectangle.and.text.magnifyingglass"), "검색어를 넣어 검색해주세요.")
+    @Published public var state: ResultState<ImageSearchEntity> = .noSearch(NoSearchModel(message: "검색어를 넣어 검색해주세요.") )
 
     private let searchText = CurrentValueSubject<String, Never>("")
     private var cancellables: Set<AnyCancellable> = []
@@ -81,7 +81,7 @@ public class ImageSearchViewModelImpl: ImageSearchViewModel {
         Future<ResultState<ImageSearchEntity>, Never> { promise in
 
             guard keyword.isEmpty == false else {
-                promise(.success(.noSearch(Image(systemName: "rectangle.and.text.magnifyingglass"), "검색어를 넣어 검색해주세요.") ) )
+                promise(.success(.noSearch(NoSearchModel(message: "검색어를 넣어 검색해주세요.") ) ) )
                 return
             }
 
@@ -93,7 +93,8 @@ public class ImageSearchViewModelImpl: ImageSearchViewModel {
                     }
 
                     if result.totalCount == 0 {
-                        promise(.success(.empty(Image(systemName: "exclamationmark.icloud"), "검색 결과가 없습니다.") ))
+
+                        promise(.success(.empty(ResultEmpty(message: "검색 결과가 없습니다.")) ))
                     } else {
                         promise(.success(.list(result)))
                     }
@@ -102,7 +103,8 @@ public class ImageSearchViewModelImpl: ImageSearchViewModel {
 
                 } catch {
 
-                    promise(.success(.error(error as NSError)))
+
+                    promise(.success(.error(ResultError(networkError: error) )))
                 }
             }
         }.eraseToAnyPublisher()
@@ -164,7 +166,7 @@ public class ImageSearchViewModelImpl: ImageSearchViewModel {
             } catch {
 
                 await MainActor.run {[weak self] in
-                    self?.state = .error(error as NSError)
+                    self?.state = .error(ResultError(networkError: error) )
                 }
 
             }

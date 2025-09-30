@@ -24,8 +24,8 @@ public protocol BookSearchViewModel: ObservableObject {
 final public class BookSearchViewModelImpl: BookSearchViewModel {
 
     @Published public var state: ResultState<BookSearchModel> =
-        .noSearch(Image(systemName: "rectangle.and.text.magnifyingglass"),
-                  "검색어를 넣어 검색해주세요.")
+        .noSearch(NoSearchModel(message: "검색어를 넣어 검색해주세요.") )
+
 
     let bookSearchUseCase: BookSearchUseCase
     let bookMarkUseCase: BookMarkUseCase
@@ -80,8 +80,7 @@ final public class BookSearchViewModelImpl: BookSearchViewModel {
         return Future { promise in
 
             guard keyword.isEmpty == false else {
-                promise(.success(.noSearch(Image(systemName: "rectangle.and.text.magnifyingglass"),
-                                           "검색어를 넣어 검색해주세요.") ) )
+                promise(.success(.noSearch(NoSearchModel(message: "검색어를 넣어 검색해주세요.")) ) )
                 return
             }
 
@@ -94,8 +93,8 @@ final public class BookSearchViewModelImpl: BookSearchViewModel {
                     }
 
                     if result.totalCount == 0 {
-                        promise(.success(.empty(Image(systemName: "exclamationmark.icloud"),
-                                                "검색 결과가 없습니다.") ))
+                        promise(.success(.empty(ResultEmpty(message: "검색 결과가 없습니다.") )) )
+
                     } else {
                         promise(.success(.list(result)))
                     }
@@ -104,7 +103,7 @@ final public class BookSearchViewModelImpl: BookSearchViewModel {
 
                 } catch {
 
-                    promise(.success(.error(error as NSError)))
+                    promise(.success(.error(ResultError(networkError: error) ) ) )
                 }
             }
         }
@@ -171,7 +170,8 @@ final public class BookSearchViewModelImpl: BookSearchViewModel {
             } catch {
 
                 await MainActor.run {[weak self] in
-                    self?.state = .error(error as NSError)
+                    
+                    self?.state = .error(ResultError(networkError: error))
                 }
 
             }

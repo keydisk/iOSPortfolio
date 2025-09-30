@@ -13,7 +13,7 @@ import DesignSystem
 
 class BookMarkDetailViewController: UIViewController {
 
-    let url: String
+    let url : String
     var coordinator : (any BookMarkCoordinator)?
     weak var webView: CustomWebView?
 

@@ -23,7 +23,7 @@ public protocol BookMarkViewModel {
 
 public final class BookMarkViewModelImpl: BookMarkViewModel {
 
-    public var state: BehaviorRelay<ResultState<[BookMarkItemSection]>> = BehaviorRelay<ResultState<[BookMarkItemSection]>>(value: .noSearch(Image(systemName: "rectangle.and.text.magnifyingglass"), "검색어를 넣어 검색해주세요."))
+    public var state: BehaviorRelay<ResultState<[BookMarkItemSection]>> = BehaviorRelay<ResultState<[BookMarkItemSection]>>(value: .noSearch(NoSearchModel(message: "검색어를 넣어 검색해주세요.")) )
 
     let disposeBag = DisposeBag()
     var cancelable = Set<AnyCancellable>()

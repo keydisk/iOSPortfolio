@@ -19,7 +19,8 @@ public protocol PhotoViewModel: ObservableObject {
 
 public class PhotoViewModelImpl: PhotoViewModel {
 
-    @Published public var state: ResultState<[PhotoEntity]> = .empty(Image(systemName: "exclamationmark.icloud"), "이미지가 없습니다.")
+    @Published public var state: ResultState<[PhotoEntity]> = .empty(ResultEmpty(message: "이미지가 없습니다."))
+
     private var pageNo: Int = 1
 
     let photoUseCase: PhotoUseCase
@@ -41,14 +42,14 @@ public class PhotoViewModelImpl: PhotoViewModel {
 
                 await MainActor.run {[weak self] in
                     if list.isEmpty {
-                        self?.state = .empty(Image(systemName: "exclamationmark.icloud"), "이미지가 없습니다.")
+                        self?.state = .empty(ResultEmpty(message: "이미지가 없습니다."))
                     } else {
                         self?.state = .list(list)
                     }
                 }
 
             } catch {
-
+                
             }
         }
     }

@@ -7,16 +7,17 @@
 //
 
 import SwiftUI
+import Core
 
 public struct StatePrintView: View {
 
     let iconImage: Image
     let title: String
 
-    public init(iconImage: Image, title: String) {
+    public init(stateModel: ResultWithIconMessage) {
 
-        self.iconImage = iconImage
-        self.title = title
+        self.iconImage = stateModel.icon
+        self.title = stateModel.message
     }
 
     public var body: some View {
@@ -39,8 +40,4 @@ public struct StatePrintView: View {
             }
         }
     }
-}
-
-#Preview {
-    StatePrintView(iconImage: Image(systemName: "rectangle.and.text.magnifyingglass"), title: "검색어를 입력하세요")
 }
